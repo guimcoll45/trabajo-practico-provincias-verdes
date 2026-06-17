@@ -56,7 +56,7 @@ public class MenuPrincipal {
         System.out.println("3. Gestión de Equipos Solares");
         System.out.println("4. Registro de Mediciones");
         System.out.println("5. Reportes y Estadísticas");
-        System.out.println("6. Ordenar / Buscar Datos");
+        System.out.println("6. CALCULAR BALANCE ENERGÉTICO");
         System.out.println("0. Salir");
         System.out.println("---------------------------------------------");
     }
@@ -79,7 +79,36 @@ public class MenuPrincipal {
                 System.out.println("👉 Generando reportes...");
                 break;
             case 6:
-                System.out.println("👉 Herramientas de búsqueda y orden...");
+                System.out.println("\n--- CÁLCULO DE BALANCE ENERGÉTICO ---");
+                System.out.println("1. Calcular de un registro nuevo");
+                System.out.println("2. Calcular de registro guardado");
+                System.out.print("Elija una opción: ");
+                int subOpcion = scanner.nextInt();
+
+                if (subOpcion == 1) {
+                    // Opción 1: Ingresar valores manualmente
+                    System.out.print("Ingrese energía GENERADA (kWh): ");
+                    double gen = scanner.nextDouble();
+                    System.out.print("Ingrese energía CONSUMIDA (kWh): ");
+                    double con = scanner.nextDouble();
+
+                    // Creamos un registro temporal para calcular
+                    RegistroEnergia temporal = new RegistroEnergia();
+                    temporal.setEnergiaGeneradaKwh(gen);
+                    temporal.setEnergiaConsumidaKwh(con);
+
+                    // Llamamos al cálculo
+                    gestorEnergia.mostrarBalance(temporal);
+
+                } else if (subOpcion == 2) {
+                    // Opción 2: Buscar por ID
+                    System.out.print("Ingrese el ID del registro a consultar: ");
+                    long idBuscar = scanner.nextLong();
+                    RegistroEnergia encontrado = gestorEnergia.buscarRegistroPorId(idBuscar);
+                    gestorEnergia.mostrarBalance(encontrado);
+                } else {
+                    System.out.println("❌ Opción inválida.");
+                }
                 break;
             case 0:
                 this.sistemaActivo = false;

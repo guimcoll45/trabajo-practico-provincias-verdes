@@ -71,6 +71,7 @@ Verificá que en el archivo `ConexionDB.java` los datos coincidan con tu configu
 private static final String URL = "jdbc:mysql://localhost:3306/provincias_verdes?useSSL=false&serverTimezone=UTC";
 private static final String USUARIO = "root"; 
 private static final String CLAVE = ""; // Dejar vacío si no tenés contraseña
+
 3. Compilar y Ejecutar
 Abrí el proyecto en tu IDE.
 Ejecutá la clase principal: com.provinciasverdes.presentacion.Main.java

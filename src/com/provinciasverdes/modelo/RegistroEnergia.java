@@ -1,55 +1,113 @@
 package com.provinciasverdes.modelo;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+/**
+ * Clase que representa el registro de mediciones de energía en un momento dado
+ */
 public class RegistroEnergia extends EntidadBase {
-    private Timestamp fechaHora; // Fecha y hora exacta
-    private double energiaGen;   // kWh generados
-    private double energiaCon;   // kWh consumidos
+
+    private LocalDateTime fechaHora;
+    private double energiaGeneradaKwh;
+    private double energiaConsumidaKwh;
     private double voltaje;
     private double corriente;
+    private EquipoSolar equipoAsociado;
 
+    // Constructor vacío
     public RegistroEnergia() {
-        super();
     }
 
-    public RegistroEnergia(int id, Timestamp fechaHora, double energiaGen, double energiaCon, double voltaje, double corriente) {
-        super(id);
+    // Constructor con parámetros
+    public RegistroEnergia(LocalDateTime fechaHora, double energiaGeneradaKwh, double energiaConsumidaKwh, 
+                           double voltaje, double corriente, EquipoSolar equipoAsociado) {
         this.fechaHora = fechaHora;
-        this.energiaGen = energiaGen;
-        this.energiaCon = energiaCon;
+        this.energiaGeneradaKwh = energiaGeneradaKwh;
+        this.energiaConsumidaKwh = energiaConsumidaKwh;
         this.voltaje = voltaje;
+        this.corriente = corriente;
+        this.equipoAsociado = equipoAsociado;
+    }
+
+    // Getters y Setters
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public double getEnergiaGeneradaKwh() {
+        return energiaGeneradaKwh;
+    }
+
+    public void setEnergiaGeneradaKwh(double energiaGeneradaKwh) {
+        this.energiaGeneradaKwh = energiaGeneradaKwh;
+    }
+
+    public double getEnergiaConsumidaKwh() {
+        return energiaConsumidaKwh;
+    }
+
+    public void setEnergiaConsumidaKwh(double energiaConsumidaKwh) {
+        this.energiaConsumidaKwh = energiaConsumidaKwh;
+    }
+
+    public double getVoltaje() {
+        return voltaje;
+    }
+
+    public void setVoltaje(double voltaje) {
+        this.voltaje = voltaje;
+    }
+
+    public double getCorriente() {
+        return corriente;
+    }
+
+    public void setCorriente(double corriente) {
         this.corriente = corriente;
     }
 
-    // Getters y Setters con validación
-    public Timestamp getFechaHora() { return fechaHora; }
-    public void setFechaHora(Timestamp fechaHora) { this.fechaHora = fechaHora; }
-    public double getEnergiaGen() { return energiaGen; }
-    public void setEnergiaGen(double energiaGen) { 
-        if(energiaGen >= 0) this.energiaGen = energiaGen; 
+    public EquipoSolar getEquipoAsociado() {
+        return equipoAsociado;
     }
-    public double getEnergiaCon() { return energiaCon; }
-    public void setEnergiaCon(double energiaCon) { 
-        if(energiaCon >= 0) this.energiaCon = energiaCon; 
-    }
-    public double getVoltaje() { return voltaje; }
-    public void setVoltaje(double voltaje) { this.voltaje = voltaje; }
-    public double getCorriente() { return corriente; }
-    public void setCorriente(double corriente) { this.corriente = corriente; }
 
-    // Lógica principal: Balance Energético
-    public double calcularBalance() {
-        return this.energiaGen - this.energiaCon;
+    public void setEquipoAsociado(EquipoSolar equipoAsociado) {
+        this.equipoAsociado = equipoAsociado;
+    }
+
+    // ✅ MÉTODOS DE CÁLCULO DEL BALANCE (LO QUE AGREGAMOS)
+    /**
+     * Calcula la diferencia entre lo generado y lo consumido
+     * @return valor positivo = excedente, negativo = déficit
+     */
+    public double calcularBalanceEnergetico() {
+        return this.energiaGeneradaKwh - this.energiaConsumidaKwh;
+    }
+
+    /**
+     * Devuelve un mensaje descriptivo del estado del balance
+     */
+    public String obtenerEstadoBalance() {
+        double balance = calcularBalanceEnergetico();
+        if (balance > 0) {
+            return "✅ EXCEDENTE: Se generó " + String.format("%.2f", balance) + " kWh más de lo consumido.";
+        } else if (balance < 0) {
+            return "⚠️ DÉFICIT: Faltaron " + String.format("%.2f", Math.abs(balance)) + " kWh (se usó energía de red/batería).";
+        } else {
+            return "⚖️ EQUILIBRIO: Generación y consumo son iguales.";
+        }
     }
 
     @Override
-    public void mostrarDatos() {
-        System.out.println("📊 REGISTRO: " + fechaHora);
-        System.out.println("Generado: " + energiaGen + " kWh");
-        System.out.println("Consumido: " + energiaCon + " kWh");
-        System.out.println("BALANCE: " + calcularBalance() + " kWh");
-        System.out.println("Voltaje: " + voltaje + " V | Corriente: " + corriente + " A");
-        System.out.println("──────────────────────────");
+    public String toString() {
+        return "RegistroEnergia{" +
+                "id=" + getId() +
+                ", fechaHora=" + fechaHora +
+                ", generado=" + energiaGeneradaKwh + " kWh" +
+                ", consumido=" + energiaConsumidaKwh + " kWh" +
+                '}';
     }
 }
